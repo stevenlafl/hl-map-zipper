@@ -23,3 +23,7 @@ Each zip file will also contain its own missing.txt for any missing assets per m
 These zip files are separated into folders like so:
 complete/
 incomplete/
+
+### Credits
+
+https://github.com/kriswema/resgen
