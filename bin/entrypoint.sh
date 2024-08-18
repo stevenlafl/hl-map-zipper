@@ -66,9 +66,14 @@ for bsp_file in "$maps_dir"/*.bsp; do
         target_dir="$incomplete_dir"
         final_zip_file="$incomplete_dir/$map_name.zip"
     else
+        rm $missing_file
         target_dir="$complete_dir"
         final_zip_file="$complete_dir/$map_name.zip"
     fi
+
+    # Copy the .bsp file itself into the temp directory
+    mkdir -p "$temp_dir/maps"
+    cp "$bsp_file" "$temp_dir/maps/$map_name.bsp"
 
     # Change into the temporary directory to create the ZIP file
     (cd "$temp_dir" && zip -r "$zip_file" . > /dev/null)
