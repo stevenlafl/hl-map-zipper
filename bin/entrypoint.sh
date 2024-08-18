@@ -4,6 +4,12 @@
 input_dir="/input"
 maps_dir="$input_dir/maps"
 output_dir="/output"
+complete_dir="$output_dir/complete"
+incomplete_dir="$output_dir/incomplete"
+
+# Create directories for complete and incomplete maps
+mkdir -p "$complete_dir"
+mkdir -p "$incomplete_dir"
 
 # Initialize an associative array to track unique missing assets
 declare -A all_missing_assets
@@ -55,10 +61,20 @@ for bsp_file in "$maps_dir"/*.bsp; do
     # Sort the missing assets for the current map
     sort -u "$missing_file" -o "$missing_file"
 
+    # Determine whether the map is complete or incomplete based on the missing assets
+    if [ -s "$missing_file" ]; then
+        target_dir="$incomplete_dir"
+        final_zip_file="$incomplete_dir/$map_name.zip"
+    else
+        target_dir="$complete_dir"
+        final_zip_file="$complete_dir/$map_name.zip"
+    fi
+
     # Change into the temporary directory to create the ZIP file
     (cd "$temp_dir" && zip -r "$zip_file" . > /dev/null)
-    echo "Resources zipped for $map_name to $zip_file"
-
+    mv "$zip_file" "$final_zip_file"
+    echo "Resources zipped for $map_name to $final_zip_file"
+    
     # Clean up the temporary directory
     rm -rf "$temp_dir"
 done
